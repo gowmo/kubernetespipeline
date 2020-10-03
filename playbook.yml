@@ -1,0 +1,53 @@
+---
+
+- name: ansible playbook to install docker, pull a docker image and run it in amazon linux instance
+  hosts: ec2
+  become: yes
+
+  vars:
+    docker_image_name: moksgo91/emoji:v1
+
+  tasks:
+    - name : ping the server  
+      action: ping
+
+    - name: wget install
+      yum:  
+       name: wget
+       state: present
+       update_cache: true
+      become: true
+
+    - name: Install EPEL repo.
+      yum: name=epel-release state=latest
+
+    - name: Install docker
+      shell: "sudo yum -y install docker" 
+      become: true
+
+    - name: Start the Docker service 
+      shell: "sudo service docker start" 
+      become: true
+
+    - name:  Set permissions for docker.sock
+      shell: "sudo chmod 666 /var/run/docker.sock" 
+      become: true
+
+
+    - name: Set permissions for ec2-user  
+      shell: "sudo usermod -a -G docker ec2-user" 
+      become: true
+
+    - name: set the docker to turn on automatically
+      shell: "sudo chkconfig docker on"
+      become: true
+
+    - name: pull the latest docker image which was uploaded in the previous step from Dockerhub
+      shell: "sudo docker pull {{ docker_image_name }}"
+      become: true
+
+    - name: Run the productionized container
+      shell: "sudo docker run -d -p 3000:3000 moksgo91/emoji:v1 "
+      become: true
+
+...
