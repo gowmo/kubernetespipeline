@@ -3,10 +3,13 @@ This repository contains project files used to deploy react application to a Kub
 
 Tools Used : 
 Kubernetes
-AWS EC2
+Terraform
+Docker
+AWS EC2, 
 AWS IAM
 Ansible
-Terraform
 Jenkins
+Github
+Dockerhub
 
 
